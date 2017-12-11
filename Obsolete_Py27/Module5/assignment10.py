@@ -64,8 +64,9 @@ while i < 50:
     wavdat = wavfile.read(commondir + str(i) + '.wav')
     #print commondir + str(i) + '.wav'
     zero.append(wavdat[1])
+    sample_rate = wavdat[0]
     i += 1
-
+#make sure zero converts to correct deminsion dataframe
 # 
 # TODO: Just for a second, convert zero into a DataFrame. When you do
 # so, set the dtype to np.int16, since the input audio files are 16
@@ -83,7 +84,8 @@ while i < 50:
 zero = pd.DataFrame(zero,dtype=np.int16)
 zero.dropna(axis=0,inplace=True)
 n_audio_samples = len(zero.columns)
-WavArray = zero.values
+#print zero 
+zero = zero.values
 #
 # TODO: It's important to know how (many audio_samples samples) long the
 # data is now. 'zero' is currently shaped [n_samples, n_audio_samples],
@@ -110,6 +112,7 @@ from sklearn.utils.validation import check_random_state
 rng   = check_random_state(7)  # Leave this alone until you've submitted your lab
 random_idx = rng.randint(zero.shape[0])
 test  = zero[random_idx]
+#print zero.shape
 train = np.delete(zero, [random_idx], axis=0)
 
 
@@ -121,8 +124,8 @@ train = np.delete(zero, [random_idx], axis=0)
 # train will be shaped [n_audio_features], since it is a single
 # sample (audio file, e.g. observation).
 #
-print test.shape()
-print train.shape()
+#print test.shape
+#print train
 
 
 #
