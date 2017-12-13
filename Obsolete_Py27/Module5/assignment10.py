@@ -36,7 +36,7 @@ import scipy.io.wavfile as wavfile
 # TODO: Play with this. This is how much of the audio file will
 # be provided, in percent. The remaining percent of the file will
 # be generated via linear extrapolation.
-Provided_Portion = 0.25
+Provided_Portion = 0.5
 
 
 
@@ -62,11 +62,9 @@ commondir = 'free-spoken-digit-dataset/recordings/0_jackson_'
 i = 0
 while i < 50:
     wavdat = wavfile.read(commondir + str(i) + '.wav')
-    #print commondir + str(i) + '.wav'
     zero.append(wavdat[1])
     sample_rate = wavdat[0]
     i += 1
-#make sure zero converts to correct deminsion dataframe
 # 
 # TODO: Just for a second, convert zero into a DataFrame. When you do
 # so, set the dtype to np.int16, since the input audio files are 16
@@ -82,9 +80,8 @@ while i < 50:
 # NDArray using yourarrayname.values
 #
 zero = pd.DataFrame(zero,dtype=np.int16)
-zero.dropna(axis=0,inplace=True)
+zero.dropna(axis=1,inplace=True)
 n_audio_samples = len(zero.columns)
-#print zero 
 zero = zero.values
 #
 # TODO: It's important to know how (many audio_samples samples) long the
@@ -112,7 +109,6 @@ from sklearn.utils.validation import check_random_state
 rng   = check_random_state(7)  # Leave this alone until you've submitted your lab
 random_idx = rng.randint(zero.shape[0])
 test  = zero[random_idx]
-#print zero.shape
 train = np.delete(zero, [random_idx], axis=0)
 
 
@@ -124,8 +120,8 @@ train = np.delete(zero, [random_idx], axis=0)
 # train will be shaped [n_audio_features], since it is a single
 # sample (audio file, e.g. observation).
 #
-#print test.shape
-#print train
+print test.shape
+print train.shape
 
 
 #
@@ -154,9 +150,7 @@ wavfile.write('Original Test Clip.wav', sample_rate, test)
 # 'test'. In other words, grab the FIRST Provided_Portion *
 # n_audio_samples audio features from test and store it in X_test. This
 # should be accomplished using indexing.
-#
-# .. your code here ..
-
+X_test = test[:int(n_audio_samples * Provided_Portion)] 
 
 #
 # TODO: If the first Provided_Portion * n_audio_samples features were
@@ -165,10 +159,8 @@ wavfile.write('Original Test Clip.wav', sample_rate, test)
 # in there, we will be able to R^2 "score" how well our algorithm did
 # in completing the sound file.
 #
-# .. your code here ..
 
-
-
+Y_test = test[int(n_audio_samples * Provided_Portion):] 
 
 # 
 # TODO: Duplicate the same process for X_train, y_train. The only
@@ -180,10 +172,10 @@ wavfile.write('Original Test Clip.wav', sample_rate, test)
 # X_train, and the remaining go into y_tran. All of this should be
 # accomplishable using regular indexing in two lines of code.
 #
-# .. your code here ..
+X_train = train[:,:int(n_audio_samples * Provided_Portion)] 
 
 
-
+Y_train = train[:,int(n_audio_samples * Provided_Portion):] 
 # 
 # TODO: SciKit-Learn gets mad if you don't supply your training
 # data in the form of a 2D arrays: [n_samples, n_features].
@@ -196,33 +188,31 @@ wavfile.write('Original Test Clip.wav', sample_rate, test)
 # doesn't apply, you can call .reshape(-1, 1) on your data to turn
 # [n_samples] into [n_samples, 1]:
 #
-# .. your code here ..
+X_test = X_test.reshape(1,-1)
 
-
+Y_test = Y_test.reshape(1,-1)
 #
 # TODO: Fit your model using your training data and label:
 #
-# .. your code here ..
-
+regmodel.fit(X_train, Y_train)
 
 # 
 # TODO: Use your model to predict the 'label' of X_test. Store the
 # resulting prediction in a variable called y_test_prediction
 #
-# .. your code here ..
-
+y_test_prediction = regmodel.predict(X_test)
 
 # INFO: SciKit-Learn will use float64 to generate your predictions
 # so let's take those values back to int16:
 y_test_prediction = y_test_prediction.astype(dtype=np.int16)
 
 
-
 # 
 # TODO: Score how well your prediction would do for some good laughs,
 # by passing in your test data and test label (y_test).
 #
-# .. your code here ..
+score = regmodel.score(X_test, Y_test)
+print score
 print "Extrapolation R^2 Score: ", score
 
 
