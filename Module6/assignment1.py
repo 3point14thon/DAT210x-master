@@ -5,7 +5,10 @@ import pandas as pd
 import numpy as np 
 import time
 
-
+from sklearn.model_selection import train_test_split
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.svm import SVC
+import pdb
 # 
 # INFO: Your Parameters.
 # You can adjust them after completing the lab
@@ -26,12 +29,12 @@ def drawPlots(model, X_train, X_test, y_train, y_test, wintitle='Figure 1'):
   # And view cross sections of it.
 
   # If this line throws an error, use plt.style.use('ggplot') instead
-  mpl.style.use('ggplot') # Look Pretty
+  #mpl.style.use('ggplot') # Look Pretty
 
   padding = 3
   resolution = 0.5
   max_2d_score = 0
-
+  pdb.set_trace()
   y_colors = ['#ff0000', '#00ff00', '#0000ff']
   my_cmap = mpl.colors.ListedColormap(['#ffaaaa', '#aaffaa', '#aaaaff'])
   colors = [y_colors[i] for i in y_train]
@@ -107,7 +110,7 @@ def benchmark(model, X_train, X_test, y_train, y_test, wintitle='Figure 1'):
     #
     # TODO: score the classifier on the testing data / labels:
     #
-    model.score(X_test, y_test)
+    score = model.score(X_test, y_test)
   print ("{0} Iterations Scoring Time: ".format(iterations), time.time() - s)
   print ("High-Dimensionality Score: ", round((score*100), 3))
 
@@ -117,8 +120,8 @@ def benchmark(model, X_train, X_test, y_train, y_test, wintitle='Figure 1'):
 # TODO: Load up the wheat dataset into dataframe 'X'
 # Verify you did it properly.
 # Indices shouldn't be doubled, nor weird headers...
-#
-X = pd.read_csv('Datasets\wheat.csv')
+
+X = pd.read_csv('Datasets/wheat.data')
 
 # INFO: An easy way to show which rows have nans in them
 #print X[pd.isnull(X).any(axis=1)]
@@ -127,8 +130,7 @@ X = pd.read_csv('Datasets\wheat.csv')
 # 
 # TODO: Go ahead and drop any row with a nan
 #
-# .. your code here ..
-
+X = X.dropna()
 
 
 # 
@@ -144,32 +146,28 @@ X = pd.read_csv('Datasets\wheat.csv')
 # them from X. Encode the labels, using the .map() trick we showed
 # you in Module 5 -- canadian:0, kama:1, and rosa:2
 #
-# .. your code here ..
-
-
-
+y = X.wheat_type
+X = X.drop('wheat_type', axis = 1)
+y = y.map({'kama':1, 'canadian':0, 'rosa':2})
 # 
 # TODO: Split your data into test / train sets
 # Your test size can be 30% with random_state 7.
 # Use variable names: X_train, X_test, y_train, y_test
 #
-# .. your code here ..
-
+X_train, X_test, y_train, y_test = train_test_split(X, y)
 
 
 #
 # TODO: Create an SVC classifier named svc
 # Use a linear kernel, and set the C value to C
 #
-# .. your code here ..
-
+svc = SVC(kernel='linear', C=C)
 
 #
 # TODO: Create an KNeighbors classifier named knn
 # Set the neighbor count to 5
 #
-# .. your code here ..
-
+knn = KNeighborsClassifier(n_neighbors=5)
 
 
 
