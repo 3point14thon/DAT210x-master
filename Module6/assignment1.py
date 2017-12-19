@@ -34,7 +34,7 @@ def drawPlots(model, X_train, X_test, y_train, y_test, wintitle='Figure 1'):
   padding = 3
   resolution = 0.5
   max_2d_score = 0
-  pdb.set_trace()
+  
   y_colors = ['#ff0000', '#00ff00', '#0000ff']
   my_cmap = mpl.colors.ListedColormap(['#ffaaaa', '#aaffaa', '#aaaaff'])
   colors = [y_colors[i] for i in y_train]
