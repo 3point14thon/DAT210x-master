@@ -14,7 +14,7 @@ import pdb
 # You can adjust them after completing the lab
 C = 1
 kernel = 'linear'
-iterations = 5000   # TODO: Change to 200000 once you get to Question#2
+iterations = 200000   # TODO: Change to 200000 once you get to Question#2
 
 #
 # INFO: You can set this to false if you want to
@@ -154,7 +154,7 @@ y = y.map({'kama':1, 'canadian':0, 'rosa':2})
 # Your test size can be 30% with random_state 7.
 # Use variable names: X_train, X_test, y_train, y_test
 #
-X_train, X_test, y_train, y_test = train_test_split(X, y)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=7)
 
 
 #

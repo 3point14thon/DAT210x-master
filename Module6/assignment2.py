@@ -45,7 +45,7 @@ def peekData(X_train):
   plt.show()
 
 
-def drawPredictions(X_train, X_test, y_train, y_test):
+def drawPredictions(model, X_train, X_test, y_train, y_test):
   fig = plt.figure()
 
   # Make some guesses
@@ -81,7 +81,7 @@ def drawPredictions(X_train, X_test, y_train, y_test):
 
 #
 # TODO: Pass in the file paths to the .tes and the .tra files
-X_train, X_test, y_train, y_test = load('', '')
+X_train, X_test, y_train, y_test = load('Datasets/optdigits.tes', 'Datasets/optdigits.tra')
 
 import matplotlib.pyplot as plt
 from sklearn import svm
@@ -99,28 +99,27 @@ peekData(X_train)
 # data / labels:
 print "Training SVC Classifier..."
 #
-# .. your code here ..
-
-
+svc = svm.SVC(kernel='rbf',gamma=0.001)
+svc.fit(X_train,y_train)
 
 
 # TODO: Calculate the score of your SVC against the testing data
 print "Scoring SVC Classifier..."
 #
-# .. your code here ..
+score = svc.score(X_test,y_test)
 print "Score:\n", score
 
 
 # Visual Confirmation of accuracy
-drawPredictions(X_train, X_test, y_train, y_test)
+drawPredictions(svc, X_train, X_test, y_train, y_test)
 
 
 #
 # TODO: Print out the TRUE value of the 1000th digit in the test set
 # By TRUE value, we mean, the actual provided label for that sample
 #
-# .. your code here ..
-print "1000th test label: ", true_1000th_test_value)
+true_1000th_test_value = y_test[1000]
+print "1000th test label: ", true_1000th_test_value
 
 
 #
@@ -129,7 +128,7 @@ print "1000th test label: ", true_1000th_test_value)
 # INFO: If you get a warning on your predict line, look at the
 # notes from the previous module's labs.
 #
-# .. your code here ..
+guess_1000th_test_value = svc.predict(X_test.iloc[1000,:].values.reshape(1,-1))
 print "1000th test prediction: ", guess_1000th_test_value
 
 
@@ -137,8 +136,7 @@ print "1000th test prediction: ", guess_1000th_test_value
 # TODO: Use IMSHOW to display the 1000th test image, so you can
 # visually check if it was a hard image, or an easy image
 #
-# .. your code here ..
-
+plt.imshow(X_test.iloc[1000,:].values.reshape(8,8))
 
 #
 # TODO: Were you able to beat the USPS advertised accuracy score
