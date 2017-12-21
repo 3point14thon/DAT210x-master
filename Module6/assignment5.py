@@ -1,6 +1,7 @@
 import pandas as pd
-
-
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier
+from subprocess import call
 #https://archive.ics.uci.edu/ml/machine-learning-databases/mushroom/agaricus-lepiota.names
 
 
@@ -12,7 +13,7 @@ import pandas as pd
 # Check NA Encoding
 #
 # .. your code here ..
-
+X = pd.read_csv('Datasets/agaricus-lepiota.data',names=['edible','cap-shape','cap-surface','cap-color','bruises','odor','gill-attachment','gill-spacing','gill-size','gill-color','stalk-shape','stalk-root','stalk-surface-above-ring','stalk-surface-below-ring','stalk-color-above-ring','stalk-color-below-ring','veil-type','veil-color','ring-number','ring-type','spore-print-color','population','habitat'])
 # INFO: An easy way to show which rows have nans in them
 #print X[pd.isnull(X).any(axis=1)]
 
@@ -21,6 +22,7 @@ import pandas as pd
 # TODO: Go ahead and drop any row with a nan
 #
 # .. your code here ..
+X = X.dropna()
 print X.shape
 
 
@@ -30,13 +32,15 @@ print X.shape
 # you in Module 5 -- canadian:0, kama:1, and rosa:2
 #
 # .. your code here ..
-
+y = X.edible
+X = X.drop('edible',axis=1)
+y = y.map({'e':1,'p':0})
 
 #
 # TODO: Encode the entire dataset using dummies
 #
 # .. your code here ..
-
+X = pd.get_dummies(X)
 
 # 
 # TODO: Split your data into test / train sets
@@ -44,20 +48,22 @@ print X.shape
 # Use variable names: X_train, X_test, y_train, y_test
 #
 # .. your code here ..
-
+X_train, X_test, y_train, y_test = train_test_split(X,y,test_size=0.3,random_state=7)
 
 
 #
 # TODO: Create an DT classifier. No need to set any parameters
 #
 # .. your code here ..
-
+model = DecisionTreeClassifier()
  
 #
 # TODO: train the classifier on the training data / labels:
 # TODO: score the classifier on the testing data / labels:
 #
 # .. your code here ..
+model.fit(X_train,y_train)
+score = model.score(X_test,y_test)
 print "High-Dimensionality Score: ", round((score*100), 3)
 
 
@@ -70,5 +76,5 @@ print "High-Dimensionality Score: ", round((score*100), 3)
 # tree directly from the exported tree.dot file without having to issue a call.
 #
 # .. your code here ..
-
+call(['dot','-T','png','tree.dot','-0','tree.png'])
 

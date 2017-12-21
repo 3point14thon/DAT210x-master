@@ -24,7 +24,7 @@ X_train = prepro.transform(X_train)
 X_test = prepro.transform(X_test)
 
 #test components 4 to 6 and neighbors 2 to 5 inclusive on both
-iso = Isomap(n_components=4,n_neighbors=4)
+iso = Isomap(n_components=6,n_neighbors=5)
 iso.fit(X_train)
 X_train = iso.transform(X_train)
 X_test = iso.transform(X_test)
